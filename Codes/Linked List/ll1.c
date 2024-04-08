@@ -25,17 +25,19 @@ struct node
 struct node *create_list(struct node *start);
 void display(struct node *start);
 int count_nodes(struct node *start);
-void search_node(struct node *start, int item);
+int search_node(struct node *start, int item);
 struct node *add_at_empty(struct node *start, int item);
 struct node *add_at_beg(struct node *start, int item);
 struct node *add_at_end(struct node *start, int item);
+struct node *add_before(struct node *start, int item, int n);
+struct node *add_after(struct node *start, int item, int n);
 
 int main()
 {
     struct node *start = NULL;
     while (1)
     {
-        int choice, search, item;
+        int choice, search, item, n;
         printf("\n1. Create List.\n");
         printf("2. Display List.\n");
         printf("3. Count the number of Nodes in the List.\n");
@@ -44,12 +46,12 @@ int main()
         printf("6. Add to the beginning of the List.\n");
         printf("7. Add to the end of the List.\n");
         printf("8. Add Before a Node.\n");
-        printf("8. Add after a Node.\n");
-        printf("9. Add between two Nodes.\n");
-        printf("10. Add at any position Node.\n");
-        printf("11. Delete.\n");
-        printf("12. Reverse the list.\n");
-        printf("13. Exit.\n");
+        printf("9. Add after a Node.\n");
+        printf("10. Add between two Nodes.\n");
+        printf("11. Add at any position Node.\n");
+        printf("12. Delete.\n");
+        printf("13. Reverse the list.\n");
+        printf("14. Exit.\n");
         printf("\nEnter your choice: ");
         scanf("%d", &choice);
 
@@ -67,7 +69,15 @@ int main()
         case 4:
             printf("\nEnter the element to be searched: ");
             scanf("%d", &search);
-            search_node(start, search);
+            int pos = search_node(start, search);
+            if (pos != 0)
+            {
+                printf("Element found at %d position.\n", pos);
+            }
+            else
+            {
+                printf("\nElement is not in the List.\n");
+            }
             break;
         case 5:
             printf("\nEnter the element to be inserted: ");
@@ -85,8 +95,42 @@ int main()
             start = add_at_end(start, item);
             break;
         case 8:
+            if (start == NULL)
+            {
+                printf("List is empty.\n");
+                break;
+            }
+            printf("Enter the element before which you want to insert: ");
+            scanf("%d", &n);
+            if (search_node(start, n))
+            {
+                printf("Enter the element to be inserted: ");
+                scanf("%d", &item);
+                start = add_before(start, item, n);
+            }
+            else
+            {
+                printf("Element is not in the list.\n");
+            }
             break;
         case 9:
+            if (start == NULL)
+            {
+                printf("List is empty.\n");
+                break;
+            }
+            printf("Enter the element after which you want to insert: ");
+            scanf("%d", &n);
+            if (search_node(start, n))
+            {
+                printf("Enter the element to be inserted: ");
+                scanf("%d", &item);
+                start = add_after(start, item, n);
+            }
+            else
+            {
+                printf("Element is not in the list.\n");
+            }
             break;
         case 10:
             break;
@@ -195,7 +239,7 @@ int count_nodes(struct node *start)
     return count;
 }
 
-void search_node(struct node *start, int search)
+int search_node(struct node *start, int search)
 {
     struct node *p = start;
     int pos = 1;
@@ -203,12 +247,53 @@ void search_node(struct node *start, int search)
     {
         if (search == p->data)
         {
-            printf("Element found at %d position.\n", pos);
-            return;
+            // printf("Element found at %d position.\n", pos);
+            return pos;
         }
         pos++;
         p = p->link;
     }
-    printf("\nElement Not Found\n");
-    return;
+    // printf("\nElement is not in the List.\n");
+    return 0;
+}
+
+struct node *add_before(struct node *start, int item, int n)
+{
+    struct node *p = start;
+    if (p->data == n)
+    {
+        start = add_at_beg(start, item);
+        return start;
+    }
+    while (p->link != NULL)
+    {
+        if (p->link->data == n)
+        {
+            struct node *temp = (struct node *)malloc(sizeof(struct node));
+            temp->data = item;
+            temp->link = p->link;
+            p->link = temp;
+            return start;
+        }
+        p = p->link;
+    }
+    return start;
+}
+
+struct node *add_after(struct node *start, int item, int n)
+{
+    struct node *p = start;
+    while (p != NULL)
+    {
+        if (p->data == n)
+        {
+            struct node *temp = (struct node *)malloc(sizeof(struct node));
+            temp->data = item;
+            temp->link = p->link;
+            p->link = temp;
+            return start;
+        }
+        p = p->link;
+    }
+    return start;
 }
