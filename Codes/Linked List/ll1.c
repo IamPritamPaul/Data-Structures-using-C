@@ -31,13 +31,14 @@ struct node *add_at_beg(struct node *start, int item);
 struct node *add_at_end(struct node *start, int item);
 struct node *add_before(struct node *start, int item, int n);
 struct node *add_after(struct node *start, int item, int n);
+struct node *add_in_between(struct node *start, int node1, int node2, int item);
 
 int main()
 {
     struct node *start = NULL;
     while (1)
     {
-        int choice, search, item, n;
+        int choice, search, item, n, a, b;
         printf("\n1. Create List.\n");
         printf("2. Display List.\n");
         printf("3. Count the number of Nodes in the List.\n");
@@ -133,6 +134,11 @@ int main()
             }
             break;
         case 10:
+            printf("Enter the nodes between which you want to insert: ");
+            scanf("%d%d", &a, &b);
+            printf("Enter the data you want to insert: ");
+            scanf("%d", &item);
+            start = add_in_between(start, a, b, item);
             break;
         case 11:
             break;
@@ -295,5 +301,41 @@ struct node *add_after(struct node *start, int item, int n)
         }
         p = p->link;
     }
+    return start;
+}
+
+struct node *add_in_between(struct node *start, int a, int b, int item)
+{
+    struct node *p, *q;
+    p = start;
+    q = start;
+    if (p == NULL) // checking either list is empty or not
+    {
+        printf("List is Empty.\n");
+        return start;
+    }
+    while (p != NULL)
+    {
+        if (p->data == a)
+        {
+            break;
+        }
+        p = p->link;
+    }
+    if (p == NULL)
+    { // checking for the element's existance in the list
+        printf("Element not presenmt in the list.\n");
+        return start;
+    }
+    if (p->link->data != b)
+    {
+        printf("Invalid input given.\n");
+        return start;
+    }
+    q = p->link;
+    struct node *temp = (struct node *)malloc(sizeof(struct node));
+    temp->data = item;
+    temp->link = q;
+    p->link = temp;
     return start;
 }
