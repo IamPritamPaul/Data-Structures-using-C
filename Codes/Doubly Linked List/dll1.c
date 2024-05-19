@@ -12,6 +12,7 @@ struct node *add_at_end(struct node *, int);
 struct node *create_list(struct node *);
 void search(struct node *, int);
 void display(struct node *);
+struct node *add_before(struct node *, int, int);
 
 int main()
 {
@@ -60,11 +61,11 @@ int main()
             start = add_at_end(start, data);
             break;
         case 7:
-            // printf("enter the element to be inserted : ");
-            // scanf("%d",&data);
-            // printf("enter the element before which it willbe added: ");
-            // scanf("%d",&item);
-            // start=add_before(start,item,data);
+            printf("enter the element to be inserted : ");
+            scanf("%d", &data);
+            printf("enter the element before which it willbe added: ");
+            scanf("%d", &item);
+            start = add_before(start, item, data);
             break;
         case 8:
             // printf("enter the element to be inserted : ");
@@ -85,6 +86,18 @@ int main()
         }
     }
     return 0;
+}
+
+int check_first_node(struct node *p)
+{
+    if (p->prev == NULL)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 struct node *add_at_beg(struct node *start, int data)
@@ -138,6 +151,7 @@ struct node *create_list(struct node *start)
     }
     return start;
 };
+
 void search(struct node *start, int data)
 {
     struct node *p = start;
@@ -172,3 +186,26 @@ void display(struct node *start)
     }
     printf("\n");
 }
+
+struct node *add_before(struct node *start, int item, int data)
+{
+    struct node *temp, *p;
+    temp = (struct node *)malloc(sizeof(struct node *));
+    p = start;
+    while (p != NULL)
+    {
+        if (p->info == item)
+        {
+            temp->info = data;
+            temp->next = p;
+            temp->prev = p->prev;
+            if (!check_first_node(p))
+                p->prev->next = temp;
+            else
+                start = temp;
+            p->prev = temp;
+        }
+        p = p->next;
+    }
+    return start;
+};
