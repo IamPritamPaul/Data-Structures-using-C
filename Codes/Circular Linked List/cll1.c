@@ -24,7 +24,7 @@ struct node
 
 // struct node *create_list(struct node *);
 void display(struct node *);
-// int count_nodes(struct node *);
+int count_nodes(struct node *);
 // int search_node(struct node *, int);
 struct node *add_at_empty(struct node *, int);
 struct node *add_at_beg(struct node *, int);
@@ -65,7 +65,7 @@ int main()
             display(last);
             break;
         case 3:
-            // printf("\nThe number of nodes in the linked list is: %d\n", count_nodes(last));
+            printf("\nThe number of nodes in the linked list is: %d\n", count_nodes(last));
             break;
         case 4:
             // printf("\nEnter the element to be searched: ");
@@ -207,4 +207,16 @@ struct node *add_at_end(struct node *last, int item)
     last->link = temp;
     last = temp;
     return last;
+}
+
+int count_nodes(struct node *last)
+{
+    int count = 0;
+    struct node *p = last->link;
+    do
+    {
+        count++;
+        p = p->link;
+    } while (p != last->link);
+    return count;
 }
